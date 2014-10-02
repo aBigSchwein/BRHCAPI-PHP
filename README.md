@@ -83,7 +83,7 @@ Build a php page at the location of your *$redirectURI* that contains something 
     getToken($serviceEndpoint,$headers,$request_data,$code,$state,$transID);
 
 ###Post qualifying activity data to Walgreens
-You can post all kinds of data, please read the (documentation)[https://github.com/WalgreensAPI/BRHCAPI-PHP] on this as it can be very extensive.
+You can post all kinds of data, please read the [https://github.com/WalgreensAPI/BRHCAPI-PHP](documentation) on this as it can be very extensive.
 	TBA
 
 ###Unsubscribe users oAuth Token from posting data to Walgreens
