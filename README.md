@@ -20,72 +20,39 @@ way is Walgreens able to reward activity without supporting aggregate or transac
   * Unsubscribe users oAuth Token from posting data to Walgreens
 
 ###Setup your Global Environment File
-Build a globals.php file that stores all of the important string/arrays
+Look at the *globals.php* file that stores all of the important string/arrays needed for the app and edit the ones below:
 
-    $affiliateId = *"YOUR AFFILIATE ID"*;
-    $apiKey = *"YOUR API KEY"*;
-    $apiEndPoint = "https://m-qa2.walgreens.com/oauth/authorize.jsp?";
-    $redirectURI = *"YOUR REDIRECT URI"*;
-    $transID = substr((time().rand(0,time())), 0,16);
-    $state = substr((time().rand(0,time())), 0,16);
-    $cred_data = array(
-        "endpoint"=>$apiEndPoint,
-        "client_id"=>$affiliateId,
-        "response_type"=>"code",
-        "scope"=> "steps",
-        "channel"=>"5",
-        "redirect_uri"=>$redirectURI,
-        "transaction_id"=>$transID,
-        "state"=>$state
-    );
-    $serviceEndpoint = "https://services-qa.walgreens.com/api/oauthtoken/v1?";
-    $headers = array('Content-Type: application/x-www-form-urlencoded');
-    $request_data = array(
-      "grant_type" => "authorization_code",
-      "client_id" => $affiliateId,
-      "client_secret" => $apiKey,
-      "code" => "",
-      "redirect_uri" => $redirectURI,
-      "transaction_id" => $transID,
-      "channel" => "5",
-      "act" => "getOAuthToken",
-      "state" => $state
-    );
+    $affiliateId = "YOUR AFFILIATE ID";
+    $apiKey = "YOUR API KEY";
+    $redirectURI = "YOUR REDIRECT URI";
    
 ###Gain access to the Balance Rewards API via oAuth code/callback
-Build a php function that uses the array of *$cred_data* from your *globals.php* file. Once the user clicks the link they will login with their Walgreens account and be sent back to your specified *$redirectURI*
+A function can be used to create the oAuth URL from the array of *$cred_data* from your *globals.php* file. Once the user clicks the link they will login with their Walgreens account and be sent back to your specified *$redirectURI*
 
-    function createLink($cred_data)
-    {
-    	$queryURL = $cred_data['endpoint'].
-    			"client_id=".$cred_data['client_id'].
-    			"&response_type=".$cred_data['response_type'].
-    			"&scope=".$cred_data['scope'].
-    			"&channel=".$cred_data['channel'].
-    			"&redirect_uri=".$cred_data['redirect_uri'].
-    			"&transaction_id=".$cred_data['transaction_id'].
-    			"&state=".$cred_data['state'];	
-    	
-    	echo '<a href="'.$queryURL.'">Connect to Walgreens</a>';
-    }
+	function createLink($url,$cred_data)
+	{
+		$queryURL = $url.urldecode(http_build_query($cred_data));
+		
+		echo '<a id="connectLink" class="btn btn-red" href="'.$queryURL.'">Connect to Walgreens</a><br/>';
+	}
     
 ###Get/Save oAuth Token from auth code
-Build a php page at the location of your *$redirectURI* that contains something like this:
+Your page at the location of your *$redirectURI* should contain something like this:
     
-    include("./functions.php");
-    include("./globals.php");
-    
-    $scope = $_REQUEST['scope'];
-    $state = $_REQUEST['state'];
-    $code = $_REQUEST['code'];
-    $transID = $_REQUEST['transaction_id'];
-    
-    getToken($serviceEndpoint,$headers,$request_data,$code,$state,$transID);
+	include("./functions.php");
+	include("./globals.php");
+				
+	$scope = $_REQUEST['scope'];
+	$state = $_REQUEST['state'];
+	$code = $_REQUEST['code'];
+	$transID = $_REQUEST['transaction_id'];
+	
+	$response = getToken($oAuthRequestEndpoint,$headers,$request_data,$code,$state,$transID);
 
 ###Post qualifying activity data to Walgreens
-You can post all kinds of data, please read the [documentation](https://github.com/WalgreensAPI/BRHCAPI-PHP) on this as it can be very extensive.
-	TBA
+You can post all kinds of data, please read the [documentation](https://github.com/WalgreensAPI/BRHCAPI-PHP/Documentation.pdf) on this as it can be very extensive.
+	
 
 ###Unsubscribe users oAuth Token from posting data to Walgreens
-Delete the token from your users database and build a php like this:
-	TBA
+Deleting the token from your users database is laid out in depth in the [documentation](https://github.com/WalgreensAPI/BRHCAPI-PHP/Documentation.pdf).
+	
