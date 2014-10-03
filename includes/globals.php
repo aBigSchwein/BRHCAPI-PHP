@@ -4,9 +4,9 @@
     
 	$apiKey = "YOUR API KEY";
     
-	$apiEndPoint = "https://m-qa2.walgreens.com/oauth/authorize.jsp?";
+	$redirectURI = "YOUR REDIRECT URI";
 	
-	$redirectURI = "http://localhost:8888/BR_TEST/includes/CallBack.php";
+	$apiEndPoint = "https://m-qa2.walgreens.com/oauth/authorize.jsp?";
 
 	$transID = substr((time().rand(0,time())), 0,16);
 
